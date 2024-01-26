@@ -3,8 +3,9 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"sariguna_backend/configs"
 	"sariguna_backend/sariguna/app/route"
+	"sariguna_backend/sariguna/pkg/configs"
+	"sariguna_backend/sariguna/pkg/database"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -28,6 +29,12 @@ func main() {
 
 	cfg := configs.InitConfig()
 	db, err := configs.ConnectPostgres(cfg)
+
+	if err != nil {
+		panic(err)
+	}
+
+	err = database.Migration(db)
 
 	if err != nil {
 		panic(err)
