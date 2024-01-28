@@ -16,14 +16,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// swag init -g ./api/index.go
 var app *gin.Engine
 
 // @title		Swagger Exampaaale API
-// @host		https://sariguna-backend.vercel.app/
+// @host		https://sariguna-backend.vercel.app
 // @BasePath	/api
 // @schemes	http
 func init() {
 	app = gin.New()
+
+	gin.SetMode(gin.ReleaseMode)
 
 	app.Use(CORSMiddleware())
 

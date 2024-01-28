@@ -16,12 +16,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// swag init -g ./cmd/server/main.go
 var app *gin.Engine
 
-//	@title		Swagger Exampaaale API
-//	@host		localhost:8080
-//	@BasePath	/api
-//	@schemes	http
+// @title		Swagger Exampaaale API
+// @host		localhost:8080
+// @BasePath	/api
+// @schemes	http
 func main() {
 	app = gin.New()
 
