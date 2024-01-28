@@ -10,9 +10,6 @@ import (
 
 	_ "sariguna_backend/docs"
 
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -52,7 +49,7 @@ func main() {
 
 	rg := app.Group("/api")
 
-	app.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	// app.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	route.SetupRoute(rg, db)
 
