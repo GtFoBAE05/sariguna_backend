@@ -8,11 +8,20 @@ import (
 	"sariguna_backend/sariguna/pkg/database"
 	"strings"
 
+	_ "sariguna_backend/docs"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
 	"github.com/gin-gonic/gin"
 )
 
 var app *gin.Engine
 
+//	@title		Swagger Exampaaale API
+//	@host		localhost:8080
+//	@BasePath	/api
+//	@schemes	http
 func main() {
 	app = gin.New()
 
@@ -41,6 +50,8 @@ func main() {
 	}
 
 	rg := app.Group("/api")
+
+	app.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	route.SetupRoute(rg, db)
 

@@ -17,6 +17,7 @@ func RouteUser(r *gin.RouterGroup, db *sqlx.DB) {
 	user := r.Group("/user")
 
 	user.POST("/register", userHandler.Register)
+
 	user.POST("/login", userHandler.Login)
 
 }
