@@ -49,7 +49,7 @@ definitions:
       id:
         type: string
     type: object
-host: localhost:8080
+host: https://sariguna-backend.vercel.app
 info:
   contact: {}
   title: Swagger Exampaaale API

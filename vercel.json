@@ -10,6 +10,11 @@
             "source": "/api",
             "destination": "/api/ping",
             "permanent": false
+        },
+        {
+            "source": "/api/docs",
+            "destination": "/api/docs/index.html",
+            "permanent": false
         }
     ],
     "rewrites": [

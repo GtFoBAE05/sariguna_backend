@@ -15,6 +15,23 @@ func Migration(db *sqlx.DB) (err error) {
 		);
 	`
 
+	/*
+		crud
+		catalog: id, url gambar, catrgori id,deskripsi, status, created_at, updated at
+		category: id, nama
+
+		sejarah, visi, misi.
+		id tipe teks
+		  nama perusaahaan sari guna
+		  sejarah dadaw
+		  visi semangat
+		  visi juang
+
+		https://wa.me/628XXXXXXXXXX?text=Saya%20interested%20in%20your%20car%20for%20sale
+
+
+	*/
+
 	_, err = db.Exec(query)
 
 	return

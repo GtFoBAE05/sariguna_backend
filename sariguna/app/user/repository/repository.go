@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"sariguna_backend/sariguna/app/user/entity"
 	"sariguna_backend/sariguna/app/user/model"
+	"sariguna_backend/sariguna/pkg/helpers"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -23,10 +24,17 @@ func NewUserRepository(db *sqlx.DB) entity.UserRepositoryInterface {
 func (ur *userRepository) Register(data entity.UserCore) (entity.UserCore, error) {
 	request := entity.UserCoreToUserModel(data)
 
+	hashedPassword, err := helpers.HashPassword(request.Password)
+	if err != nil {
+		return entity.UserCore{}, err
+	}
+
+	request.Password = hashedPassword
+
 	query := `INSERT INTO users (id, fullname, email, password, role) 
 	VALUES (:id, :fullname, :email, :password, :role)`
 
-	_, err := ur.db.NamedExec(query, request)
+	_, err = ur.db.NamedExec(query, request)
 
 	if err != nil {
 		return entity.UserCore{}, err

@@ -3,6 +3,8 @@ package service
 import (
 	"errors"
 	"sariguna_backend/sariguna/app/user/entity"
+	"sariguna_backend/sariguna/pkg/helpers"
+	"sariguna_backend/sariguna/pkg/jwt"
 )
 
 type userService struct {
@@ -34,9 +36,15 @@ func (us *userService) Login(email, password string) (entity.UserCore, string, e
 		return entity.UserCore{}, "", err
 	}
 
-	if dataUser.Password != password {
-		return entity.UserCore{}, "", errors.New("password tidak cocok")
+	if !helpers.CompareHash(dataUser.Password, password) {
+		return entity.UserCore{}, "", errors.New("incorrect password")
 	}
 
-	return dataUser, "12345", nil
+	token, err := jwt.GenerateToken(dataUser.Id.String(), dataUser.Role)
+
+	if err != nil {
+		return entity.UserCore{}, "", err
+	}
+
+	return dataUser, token, nil
 }

@@ -7,7 +7,7 @@
         "title": "Swagger Exampaaale API",
         "contact": {}
     },
-    "host": "localhost:8080",
+    "host": "https://sariguna-backend.vercel.app",
     "basePath": "/api",
     "paths": {
         "/user/login": {
