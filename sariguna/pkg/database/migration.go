@@ -13,6 +13,11 @@ func Migration(db *sqlx.DB) (err error) {
 			created_at timestamp DEFAULT NOW(),
 			updated_at timestamp DEFAULT NOW()
 		);
+
+		CREATE TABLE IF NOT EXISTS product_category(
+			id serial PRIMARY KEY,
+			category_name varchar
+		)
 	`
 
 	/*

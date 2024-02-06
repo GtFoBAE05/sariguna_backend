@@ -4,6 +4,7 @@ package constant
 const (
 	SUCCESS_LOGIN       = "User Login successfully!"
 	SUCCESS_CREATE_DATA = "Success create data"
+	SUCCESS_UPDATE_DATA = "Success update data"
 	SUCCESS_DELETE_DATA = "Success delete data"
 	SUCCESS_GET_DATA    = "Success get data"
 )
