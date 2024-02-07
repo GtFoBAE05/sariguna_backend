@@ -25,13 +25,13 @@ func (ph *ProductHandler) CreateProduct(c *gin.Context) {
 	body := request.ProductCreate{}
 
 	if errBind := c.ShouldBind(&body); errBind != nil {
-		c.JSON(422, helpers.ErrorResponse(constant.ERROR_INVALID_PAYLOAD))
+		c.JSON(422, helpers.ErrorResponse(errBind.Error()))
 		return
 	}
 
 	file, err := c.FormFile("image")
 	if err != nil {
-		c.JSON(422, helpers.ErrorResponse(constant.ERROR_INVALID_PAYLOAD))
+		c.JSON(422, helpers.ErrorResponse(err.Error()))
 		return
 	}
 
