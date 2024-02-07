@@ -1,30 +1,46 @@
 package repository
 
 import (
+	"mime/multipart"
 	"sariguna_backend/sariguna/app/product/entity"
 	"sariguna_backend/sariguna/app/product/model"
+	"sariguna_backend/sariguna/pkg/images"
+	"time"
+
+	productcategory "sariguna_backend/sariguna/app/product_category/model"
 
 	"github.com/jmoiron/sqlx"
 )
 
-type ProductCategoryRepository struct {
+type ProductRepository struct {
 	db *sqlx.DB
 }
 
-func NewProductCategoryRepository(db *sqlx.DB) entity.ProductCategoryRepositoryInterface {
-	return &ProductCategoryRepository{
+func NewProductRepository(db *sqlx.DB) entity.ProductRepositoryInterface {
+	return &ProductRepository{
 		db: db,
 	}
 }
 
-// CreateProductCategory implements entity.ProductCategoryRepositoryInterface.
-func (pcr *ProductCategoryRepository) CreateProductCategory(data entity.ProductCategoryCore) error {
-	request := entity.ProductCategoryCoreToProductCategoryModel(data)
+// CreateProduct implements entity.ProductRepositoryInterface.
+func (pr *ProductRepository) CreateProduct(data entity.ProductCore, image *multipart.FileHeader) error {
+	productCategory := productcategory.ProductCategory{}
 
-	query := `INSERT INTO product_category (category_name) 
-	VALUES (:category_name)`
+	query := `SELECT id, category_name from product_category where id = $1`
 
-	_, err := pcr.db.NamedExec(query, request)
+	err := pr.db.Get(&productCategory, query, data.CategoryId)
+	if err != nil {
+		return err
+	}
+	uploadUrl, err := images.Upload(image, productCategory.CategoryName)
+	if err != nil {
+		return err
+	}
+
+	query = `INSERT INTO product (category_id, name, description, status, image_url) 
+	VALUES ($1, $2, $3, $4, $5)`
+
+	_, err = pr.db.Exec(query, data.CategoryId, data.Name, data.Description, data.Status, uploadUrl)
 
 	if err != nil {
 		return err
@@ -33,45 +49,135 @@ func (pcr *ProductCategoryRepository) CreateProductCategory(data entity.ProductC
 	return nil
 }
 
-// GetAllProductCategory implements entity.ProductCategoryRepositoryInterface.
-func (pcr *ProductCategoryRepository) GetAllProductCategory() ([]entity.ProductCategoryCore, error) {
-	productCategoryList := []model.ProductCategory{}
+// DeleteProduct implements entity.ProductRepositoryInterface.
+func (pr *ProductRepository) DeleteProduct(id int) error {
+	res, err := pr.GetProductById(id)
 
-	query := `SELECT id, category_name from product_category`
-
-	err := pcr.db.Select(&productCategoryList, query)
 	if err != nil {
-		return []entity.ProductCategoryCore{}, err
+		return err
 	}
 
-	result := entity.ProductCategoryModelListToProductCategoryCoreList(productCategoryList)
+	errDelete := images.Remove(res.ImageUrl)
+
+	if errDelete != nil {
+		return errDelete
+	}
+	query := `DELETE FROM product
+	WHERE id = $1`
+
+	_, err = pr.db.Exec(query, id)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// GetAllProduct implements entity.ProductRepositoryInterface.
+func (pr *ProductRepository) GetAllProduct() ([]entity.ProductCore, error) {
+	productList := []model.Product{}
+
+	query := `SELECT 
+				p.id, 
+				pc.id as category_id,
+				pc.category_name as category_name, 
+				p.name, p.description, 
+				p.status, p.image_url, 
+				p.created_at 
+				FROM product p
+				JOIN product_category pc
+				ON p.category_id = pc.id`
+
+	err := pr.db.Select(&productList, query)
+	if err != nil {
+		return []entity.ProductCore{}, err
+	}
+
+	result := entity.ProductModelListToProductCoreList(productList)
 
 	return result, nil
 }
 
-// UpdateProductCategory implements entity.ProductCategoryRepositoryInterface.
-func (pcr *ProductCategoryRepository) UpdateProductCategory(id int, data entity.ProductCategoryCore) error {
-	request := entity.ProductCategoryCoreToProductCategoryModel(data)
+// GetProductByCategory implements entity.ProductRepositoryInterface.
+func (pr *ProductRepository) GetProductByCategory(id int) ([]entity.ProductCore, error) {
+	productList := []model.Product{}
 
-	query := `UPDATE product_category
-	SET category_name = $1
-	WHERE id = $2`
+	query := `SELECT 
+				p.id, 
+				pc.category_name, 
+				p.name, p.description, 
+				p.status, p.image_url, 
+				p.created_at 
+				FROM product p
+				JOIN product_category pc
+				ON p.category_id = pc.id
+				WHERE pc.id = $1
+			`
 
-	_, err := pcr.db.Exec(query, request.CategoryName, id)
+	err := pr.db.Select(&productList, query, id)
+	if err != nil {
+		return []entity.ProductCore{}, err
+	}
 
+	result := entity.ProductModelListToProductCoreList(productList)
+
+	return result, nil
+}
+
+// GetProductById implements entity.ProductRepositoryInterface.
+func (pr *ProductRepository) GetProductById(id int) (entity.ProductCore, error) {
+	product := model.Product{}
+	query := `SELECT 
+				p.id, 
+				pc.category_name, 
+				p.name, p.description, 
+				p.status, p.image_url, 
+				p.created_at 
+				FROM product p
+				JOIN product_category pc
+				ON p.category_id = pc.id
+				WHERE p.id = $1
+			`
+
+	err := pr.db.Get(&product, query, id)
+
+	if err != nil {
+		return entity.ProductCore{}, err
+	}
+
+	result := entity.ProductModelToProductCore(product)
+
+	return result, nil
+}
+
+// UpdateProduct implements entity.ProductRepositoryInterface.
+func (pr *ProductRepository) UpdateProduct(id int, data entity.ProductCore, image *multipart.FileHeader) error {
+	request := entity.ProductCoreToProductModel(data)
+
+	productCategory := productcategory.ProductCategory{}
+
+	query := `SELECT id, category_name from product_category where id = $1`
+
+	err := pr.db.Get(&productCategory, query, data.CategoryId)
+	if err != nil {
+		return err
+	}
+	uploadUrl, err := images.Upload(image, productCategory.CategoryName)
 	if err != nil {
 		return err
 	}
 
-	return nil
-}
+	query = `UPDATE product
+	SET category_id = $1,
+	name = $2,
+	description = $3,
+	status = $4,
+	updated_at = $5,
+	image_url = $6
+	WHERE id = $7`
 
-// DeleteProductCategory implements entity.ProductCategoryRepositoryInterface.
-func (pcr *ProductCategoryRepository) DeleteProductCategory(id int) error {
-	query := `DELETE FROM product_category
-	WHERE id = $1`
-
-	_, err := pcr.db.Exec(query, id)
+	_, err = pr.db.Exec(query, request.CategoryId, request.Name, request.Description, request.Status, time.Now(), uploadUrl, id)
 
 	if err != nil {
 		return err

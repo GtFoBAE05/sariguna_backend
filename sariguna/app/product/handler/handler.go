@@ -11,37 +11,43 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type ProductCategoryHandler struct {
-	productCategoryService entity.ProductCategoryServiceInterface
+type ProductHandler struct {
+	productService entity.ProductServiceInterface
 }
 
-func NewProductCategoryHandler(pcs entity.ProductCategoryServiceInterface) *ProductCategoryHandler {
-	return &ProductCategoryHandler{
-		productCategoryService: pcs,
+func NewProductHandler(ps entity.ProductServiceInterface) *ProductHandler {
+	return &ProductHandler{
+		productService: ps,
 	}
 }
 
-func (pch *ProductCategoryHandler) CreateProductCategory(c *gin.Context) {
-	body := request.ProductCategoryCreate{}
+func (ph *ProductHandler) CreateProduct(c *gin.Context) {
+	body := request.ProductCreate{}
 
-	if errBind := c.ShouldBindJSON(&body); errBind != nil {
+	if errBind := c.ShouldBind(&body); errBind != nil {
 		c.JSON(422, helpers.ErrorResponse(constant.ERROR_INVALID_PAYLOAD))
 		return
 	}
 
-	request := request.ProductCategoryCreateToProductCategoryCore(body)
+	file, err := c.FormFile("image")
+	if err != nil {
+		c.JSON(422, helpers.ErrorResponse(constant.ERROR_INVALID_PAYLOAD))
+		return
+	}
 
-	if errCreate := pch.productCategoryService.CreateProductCategory(request); errCreate != nil {
-		c.JSON(http.StatusBadRequest, helpers.ErrorResponse(errCreate.Error()))
+	request := request.ProductCreateToProductCore(body)
+
+	if err := ph.productService.CreateProduct(request, file); err != nil {
+		c.JSON(http.StatusBadRequest, helpers.ErrorResponse(err.Error()))
 		return
 	}
 
 	c.JSON(201, helpers.SuccessResponse(constant.SUCCESS_CREATE_DATA))
 }
 
-func (pch *ProductCategoryHandler) GetAllProductCategory(c *gin.Context) {
+func (ph *ProductHandler) GetAllProduct(c *gin.Context) {
 
-	res, errCreate := pch.productCategoryService.GetAllProductCategory()
+	res, errCreate := ph.productService.GetAllProduct()
 
 	if errCreate != nil {
 		c.JSON(http.StatusBadRequest, helpers.ErrorResponse(errCreate.Error()))
@@ -51,42 +57,86 @@ func (pch *ProductCategoryHandler) GetAllProductCategory(c *gin.Context) {
 	c.JSON(201, helpers.SuccessWithDataResponse(constant.SUCCESS_GET_DATA, res))
 }
 
-func (pch *ProductCategoryHandler) UpdateProductCategory(c *gin.Context) {
-	body := request.ProductCategoryCreate{}
-	id := c.Param("id")
+func (ph *ProductHandler) GetProductById(c *gin.Context) {
 
-	idStr, errConv := strconv.Atoi(id)
+	productId := c.Param("id")
+	idStr, errConv := strconv.Atoi(productId)
 	if errConv != nil {
 		c.JSON(http.StatusBadRequest, helpers.ErrorResponse(errConv.Error()))
 		return
 	}
 
-	if errBind := c.ShouldBindJSON(&body); errBind != nil {
+	res, errCreate := ph.productService.GetProductById(idStr)
+
+	if errCreate != nil {
+		c.JSON(http.StatusBadRequest, helpers.ErrorResponse(errCreate.Error()))
+		return
+	}
+
+	c.JSON(201, helpers.SuccessWithDataResponse(constant.SUCCESS_GET_DATA, res))
+}
+
+func (ph *ProductHandler) GetProductByCategory(c *gin.Context) {
+
+	productId := c.Param("id")
+	idStr, errConv := strconv.Atoi(productId)
+	if errConv != nil {
+		c.JSON(http.StatusBadRequest, helpers.ErrorResponse(errConv.Error()))
+		return
+	}
+
+	res, errCreate := ph.productService.GetProductByCategory(idStr)
+
+	if errCreate != nil {
+		c.JSON(http.StatusBadRequest, helpers.ErrorResponse(errCreate.Error()))
+		return
+	}
+
+	c.JSON(201, helpers.SuccessWithDataResponse(constant.SUCCESS_GET_DATA, res))
+}
+
+func (ph *ProductHandler) UpdateProduct(c *gin.Context) {
+	body := request.ProductCreate{}
+
+	productId := c.Param("id")
+	idStr, errConv := strconv.Atoi(productId)
+	if errConv != nil {
+		c.JSON(http.StatusBadRequest, helpers.ErrorResponse(errConv.Error()))
+		return
+	}
+
+	if errBind := c.ShouldBind(&body); errBind != nil {
+		c.JSON(422, errBind.Error())
+		return
+	}
+
+	file, err := c.FormFile("image")
+	if err != nil {
 		c.JSON(422, helpers.ErrorResponse(constant.ERROR_INVALID_PAYLOAD))
 		return
 	}
 
-	request := request.ProductCategoryCreateToProductCategoryCore(body)
+	request := request.ProductCreateToProductCore(body)
 
-	if errCreate := pch.productCategoryService.UpdateProductCategory(idStr, request); errCreate != nil {
-		c.JSON(http.StatusBadRequest, helpers.ErrorResponse(errCreate.Error()))
+	if err := ph.productService.UpdateProduct(idStr, request, file); err != nil {
+		c.JSON(http.StatusBadRequest, helpers.ErrorResponse(err.Error()))
 		return
 	}
 
 	c.JSON(201, helpers.SuccessResponse(constant.SUCCESS_UPDATE_DATA))
 }
 
-func (pch *ProductCategoryHandler) DeleteProductCategory(c *gin.Context) {
-	id := c.Param("id")
+func (ph *ProductHandler) DeleteProduct(c *gin.Context) {
 
-	idStr, errConv := strconv.Atoi(id)
+	productId := c.Param("id")
+	idStr, errConv := strconv.Atoi(productId)
 	if errConv != nil {
 		c.JSON(http.StatusBadRequest, helpers.ErrorResponse(errConv.Error()))
 		return
 	}
 
-	if errDelete := pch.productCategoryService.DeleteProductCategory(idStr); errDelete != nil {
-		c.JSON(http.StatusBadRequest, helpers.ErrorResponse(errDelete.Error()))
+	if err := ph.productService.DeleteProduct(idStr); err != nil {
+		c.JSON(http.StatusBadRequest, helpers.ErrorResponse(err.Error()))
 		return
 	}
 

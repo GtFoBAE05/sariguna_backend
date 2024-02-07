@@ -1,22 +1,23 @@
 package service
 
 import (
+	"mime/multipart"
 	"sariguna_backend/sariguna/app/product/entity"
 )
 
-type ProductCategoryService struct {
-	ProductCategoryRepository entity.ProductCategoryRepositoryInterface
+type ProductService struct {
+	ProductRepository entity.ProductRepositoryInterface
 }
 
-func NewProductCategoryService(productCategoryRepository entity.ProductCategoryRepositoryInterface) entity.ProductCategoryServiceInterface {
-	return &ProductCategoryService{
-		ProductCategoryRepository: productCategoryRepository,
+func NewProductService(productRepository entity.ProductRepositoryInterface) entity.ProductServiceInterface {
+	return &ProductService{
+		ProductRepository: productRepository,
 	}
 }
 
-// CreateProductCategory implements entity.ProductCategoryServiceInterface.
-func (pcs *ProductCategoryService) CreateProductCategory(data entity.ProductCategoryCore) error {
-	err := pcs.ProductCategoryRepository.CreateProductCategory(data)
+// CreateProduct implements entity.ProductServiceInterface.
+func (ps *ProductService) CreateProduct(data entity.ProductCore, image *multipart.FileHeader) error {
+	err := ps.ProductRepository.CreateProduct(data, image)
 
 	if err != nil {
 		return err
@@ -25,32 +26,53 @@ func (pcs *ProductCategoryService) CreateProductCategory(data entity.ProductCate
 	return nil
 }
 
-// GetAllProductCategory implements entity.ProductCategoryServiceInterface.
-func (pcs *ProductCategoryService) GetAllProductCategory() ([]entity.ProductCategoryCore, error) {
-	result, err := pcs.ProductCategoryRepository.GetAllProductCategory()
+// DeleteProduct implements entity.ProductServiceInterface.
+func (ps *ProductService) DeleteProduct(id int) error {
+	err := ps.ProductRepository.DeleteProduct(id)
 
 	if err != nil {
-		return []entity.ProductCategoryCore{}, err
+		return err
+	}
+
+	return nil
+}
+
+// GetAllProduct implements entity.ProductServiceInterface.
+func (ps *ProductService) GetAllProduct() ([]entity.ProductCore, error) {
+	result, err := ps.ProductRepository.GetAllProduct()
+
+	if err != nil {
+		return []entity.ProductCore{}, err
 	}
 
 	return result, nil
 }
 
-// UpdateProductCategory implements entity.ProductCategoryServiceInterface.
-func (pcs *ProductCategoryService) UpdateProductCategory(id int, data entity.ProductCategoryCore) error {
-	err := pcs.ProductCategoryRepository.UpdateProductCategory(id, data)
+// GetProductByCategory implements entity.ProductServiceInterface.
+func (ps *ProductService) GetProductByCategory(id int) ([]entity.ProductCore, error) {
+	result, err := ps.ProductRepository.GetProductByCategory(id)
 
 	if err != nil {
-		return err
+		return []entity.ProductCore{}, err
 	}
 
-	return nil
-
+	return result, nil
 }
 
-// DeleteProductCategory implements entity.ProductCategoryServiceInterface.
-func (pcs *ProductCategoryService) DeleteProductCategory(id int) error {
-	err := pcs.ProductCategoryRepository.DeleteProductCategory(id)
+// GetProductById implements entity.ProductServiceInterface.
+func (ps *ProductService) GetProductById(id int) (entity.ProductCore, error) {
+	result, err := ps.ProductRepository.GetProductById(id)
+
+	if err != nil {
+		return entity.ProductCore{}, err
+	}
+
+	return result, nil
+}
+
+// UpdateProduct implements entity.ProductServiceInterface.
+func (ps *ProductService) UpdateProduct(id int, data entity.ProductCore, image *multipart.FileHeader) error {
+	err := ps.ProductRepository.UpdateProduct(id, data, image)
 
 	if err != nil {
 		return err

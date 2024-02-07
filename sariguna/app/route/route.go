@@ -15,6 +15,7 @@ func SetupRoute(r *gin.RouterGroup, db *sqlx.DB) {
 	r.GET("/docs/*any", FixRequestUri)
 	RouteUser(r, db)
 	RouteProductCategory(r, db)
+	RouteProduct(r, db)
 
 }
 

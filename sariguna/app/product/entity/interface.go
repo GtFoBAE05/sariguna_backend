@@ -1,15 +1,21 @@
 package entity
 
-type ProductCategoryRepositoryInterface interface {
-	CreateProductCategory(data ProductCategoryCore) error
-	GetAllProductCategory() ([]ProductCategoryCore, error)
-	UpdateProductCategory(id int, data ProductCategoryCore) error
-	DeleteProductCategory(id int) error
+import "mime/multipart"
+
+type ProductRepositoryInterface interface {
+	CreateProduct(data ProductCore, image *multipart.FileHeader) error
+	GetAllProduct() ([]ProductCore, error)
+	GetProductById(id int) (ProductCore, error)
+	GetProductByCategory(id int) ([]ProductCore, error)
+	UpdateProduct(id int, data ProductCore, image *multipart.FileHeader) error
+	DeleteProduct(id int) error
 }
 
-type ProductCategoryServiceInterface interface {
-	CreateProductCategory(data ProductCategoryCore) error
-	GetAllProductCategory() ([]ProductCategoryCore, error)
-	UpdateProductCategory(id int, data ProductCategoryCore) error
-	DeleteProductCategory(id int) error
+type ProductServiceInterface interface {
+	CreateProduct(data ProductCore, image *multipart.FileHeader) error
+	GetAllProduct() ([]ProductCore, error)
+	GetProductById(id int) (ProductCore, error)
+	GetProductByCategory(id int) ([]ProductCore, error)
+	UpdateProduct(id int, data ProductCore, image *multipart.FileHeader) error
+	DeleteProduct(id int) error
 }

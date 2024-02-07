@@ -1,35 +1,45 @@
 package entity
 
-import (
-	"sariguna_backend/sariguna/app/product/model"
-)
+import "sariguna_backend/sariguna/app/product/model"
 
-func ProductCategoryCoreToProductCategoryModel(data ProductCategoryCore) model.ProductCategory {
-	return model.ProductCategory{
-		CategoryName: data.CategoryName,
-	}
-}
-
-func ProductCategoryModelToProductCategoryCore(data model.ProductCategory) ProductCategoryCore {
-	return ProductCategoryCore{
+func ProductCoreToProductModel(data ProductCore) model.Product {
+	return model.Product{
 		Id:           data.Id,
-		CategoryName: data.CategoryName,
+		CategoryId:   data.CategoryId,
+		CategoryName: data.Category,
+		Name:         data.Name,
+		Description:  data.Description,
+		Status:       data.Status,
+		ImageUrl:     data.ImageUrl,
 	}
 }
 
-func ProductCategoryCoreListToProductCategoryModelList(data []ProductCategoryCore) []model.ProductCategory {
-	list := []model.ProductCategory{}
+func ProductModelToProductCore(data model.Product) ProductCore {
+	return ProductCore{
+		Id:          data.Id,
+		CategoryId:  data.CategoryId,
+		Category:    data.CategoryName,
+		Name:        data.Name,
+		Description: data.Description,
+		Status:      data.Status,
+		ImageUrl:    data.ImageUrl,
+		CreatedAt:   data.CreatedAt,
+	}
+}
+
+func ProductCoreListToProductModelList(data []ProductCore) []model.Product {
+	list := []model.Product{}
 	for _, v := range data {
-		result := ProductCategoryCoreToProductCategoryModel(v)
+		result := ProductCoreToProductModel(v)
 		list = append(list, result)
 	}
 	return list
 }
 
-func ProductCategoryModelListToProductCategoryCoreList(data []model.ProductCategory) []ProductCategoryCore {
-	list := []ProductCategoryCore{}
+func ProductModelListToProductCoreList(data []model.Product) []ProductCore {
+	list := []ProductCore{}
 	for _, v := range data {
-		result := ProductCategoryModelToProductCategoryCore(v)
+		result := ProductModelToProductCore(v)
 		list = append(list, result)
 	}
 	return list

@@ -2,17 +2,20 @@ package response
 
 import "sariguna_backend/sariguna/app/product/entity"
 
-func ProductCategoryCoreToProductCategoryResponse(data entity.ProductCategoryCore) ProductCategoryResponse {
-	return ProductCategoryResponse{
-		Id:                  data.Id,
-		ProductCategoryName: data.CategoryName,
+func ProductCoreToProductResponse(data entity.ProductCore) ProductResponse {
+	return ProductResponse{
+		Id:              data.Id,
+		ProductCategory: data.Category,
+		Name:            data.Name,
+		Description:     data.Description,
+		ImageUrl:        data.ImageUrl,
 	}
 }
 
-func ProductCategoryListCoreToProductCategoryListResponse(data []entity.ProductCategoryCore) []ProductCategoryResponse {
-	list := []ProductCategoryResponse{}
+func ProductListToProductListResponse(data []entity.ProductCore) []ProductResponse {
+	list := []ProductResponse{}
 	for _, v := range data {
-		result := ProductCategoryCoreToProductCategoryResponse(v)
+		result := ProductCoreToProductResponse(v)
 		list = append(list, result)
 	}
 	return list

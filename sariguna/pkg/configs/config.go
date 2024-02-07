@@ -20,6 +20,12 @@ type AppConfig struct {
 	DBNAME     string
 }
 
+type CloudinaryConfig struct {
+	CLOUDNAME      string
+	CLOUDAPIKEY    string
+	CLOUDAPISECRET string
+}
+
 func ConnectPostgres(cfg *AppConfig) (*sqlx.DB, error) {
 	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		cfg.DBHOST, cfg.DBPORT, cfg.DBUSER, cfg.DBPASS, cfg.DBNAME,
@@ -87,6 +93,27 @@ func loadConfig() *AppConfig {
 
 	if val, found := os.LookupEnv("DBNAME"); found {
 		res.DBNAME = val
+	}
+
+	return res
+
+}
+
+func LoadCloudinaryConfig() *CloudinaryConfig {
+	var res = new(CloudinaryConfig)
+
+	godotenv.Load(".env")
+
+	if val, found := os.LookupEnv("CLOUDINARY_NAME"); found {
+		res.CLOUDNAME = val
+	}
+
+	if val, found := os.LookupEnv("CLOUDINARY_API_KEY"); found {
+		res.CLOUDAPIKEY = val
+	}
+
+	if val, found := os.LookupEnv("CLOUDINARY_API_SECRET"); found {
+		res.CLOUDAPISECRET = val
 	}
 
 	return res

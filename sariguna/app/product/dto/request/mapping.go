@@ -2,8 +2,11 @@ package request
 
 import "sariguna_backend/sariguna/app/product/entity"
 
-func ProductCategoryCreateToProductCategoryCore(data ProductCategoryCreate) entity.ProductCategoryCore {
-	return entity.ProductCategoryCore{
-		CategoryName: data.CategoryName,
+func ProductCreateToProductCore(data ProductCreate) entity.ProductCore {
+	return entity.ProductCore{
+		CategoryId:  data.ProductCategoryId,
+		Name:        data.Name,
+		Description: data.Description,
+		Status:      data.Status,
 	}
 }

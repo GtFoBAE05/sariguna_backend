@@ -17,12 +17,31 @@ func Migration(db *sqlx.DB) (err error) {
 		CREATE TABLE IF NOT EXISTS product_category(
 			id serial PRIMARY KEY,
 			category_name varchar
-		)
+		);
+
+		CREATE TABLE IF NOT EXISTS product(
+			id serial PRIMARY KEY,
+			category_id integer,
+			name varchar(150),
+			description varchar(150),
+			status bool,
+			image_url varchar(150),
+			created_at timestamp DEFAULT NOW(),
+			updated_at timestamp DEFAULT NOW()
+		);
+
+		ALTER TABLE product DROP CONSTRAINT IF EXISTS fk_product_category;
+
+		ALTER TABLE product
+		ADD CONSTRAINT fk_product_category
+		FOREIGN KEY (category_id)
+		REFERENCES product_category(id);
+
 	`
 
 	/*
 		crud
-		catalog: id, url gambar, catrgori id,deskripsi, status, created_at, updated at
+		catalog: id, url gambar, catrgori id,name, deskripsi, status, created_at, updated at
 		category: id, nama
 
 		sejarah, visi, misi.

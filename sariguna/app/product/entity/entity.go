@@ -1,6 +1,14 @@
 package entity
 
-type ProductCategoryCore struct {
-	Id           int
-	CategoryName string
+import "time"
+
+type ProductCore struct {
+	Id          int
+	CategoryId  int
+	Category    string
+	Name        string
+	Description string
+	Status      bool
+	ImageUrl    string
+	CreatedAt   time.Time
 }

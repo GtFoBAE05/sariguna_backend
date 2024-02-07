@@ -1,6 +1,9 @@
 package response
 
-type ProductCategoryResponse struct {
-	Id                  int    `json:"id`
-	ProductCategoryName string `json:"ProductCategoryName"`
+type ProductResponse struct {
+	Id              int    `json:"id"`
+	ProductCategory string `json:"productCategory"`
+	Name            string `json:"name"`
+	Description     string `json:"description"`
+	ImageUrl        string `json:"imageUrl"`
 }

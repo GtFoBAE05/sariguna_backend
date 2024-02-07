@@ -1,9 +1,9 @@
 package route
 
 import (
-	"sariguna_backend/sariguna/app/product/handler"
-	"sariguna_backend/sariguna/app/product/repository"
-	"sariguna_backend/sariguna/app/product/service"
+	"sariguna_backend/sariguna/app/product_category/handler"
+	"sariguna_backend/sariguna/app/product_category/repository"
+	"sariguna_backend/sariguna/app/product_category/service"
 	"sariguna_backend/sariguna/pkg/middleware"
 
 	"github.com/gin-gonic/gin"
