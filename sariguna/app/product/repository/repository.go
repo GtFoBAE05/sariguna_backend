@@ -62,6 +62,7 @@ func (pr *ProductRepository) DeleteProduct(id int) error {
 	if errDelete != nil {
 		return errDelete
 	}
+
 	query := `DELETE FROM product
 	WHERE id = $1`
 
@@ -156,10 +157,21 @@ func (pr *ProductRepository) UpdateProduct(id int, data entity.ProductCore, imag
 	request := entity.ProductCoreToProductModel(data)
 
 	productCategory := productcategory.ProductCategory{}
+	res, err := pr.GetProductById(id)
+
+	if err != nil {
+		return err
+	}
+
+	errDelete := images.Remove(res.ImageUrl)
+
+	if errDelete != nil {
+		return errDelete
+	}
 
 	query := `SELECT id, category_name from product_category where id = $1`
 
-	err := pr.db.Get(&productCategory, query, data.CategoryId)
+	err = pr.db.Get(&productCategory, query, data.CategoryId)
 	if err != nil {
 		return err
 	}
