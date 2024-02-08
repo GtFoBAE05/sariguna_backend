@@ -14,6 +14,19 @@ definitions:
       status:
         type: boolean
     type: object
+  request.CompanyProfileUpdate:
+    properties:
+      misi:
+        type: string
+      sejarah:
+        type: string
+      visi:
+        type: string
+    required:
+    - misi
+    - sejarah
+    - visi
+    type: object
   request.ProductCategoryCreate:
     properties:
       CategoryName:
@@ -46,6 +59,15 @@ definitions:
     - fullname
     - password
     - role
+    type: object
+  response.CompanyProfileResponse:
+    properties:
+      misi:
+        type: string
+      sejarah:
+        type: string
+      visi:
+        type: string
     type: object
   response.ProductCategoryResponse:
     properties:
@@ -417,6 +439,62 @@ paths:
       summary: Update product
       tags:
       - product
+  /profile/:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/helpers.SuccessResponseJson'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.CompanyProfileResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.ErrorResponseJson'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/helpers.ErrorResponseJson'
+      summary: Get company profile
+      tags:
+      - company profile
+  /profile/update:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Update
+        in: body
+        name: Update
+        required: true
+        schema:
+          $ref: '#/definitions/request.CompanyProfileUpdate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/helpers.SuccessResponseJson'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.ErrorResponseJson'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/helpers.ErrorResponseJson'
+      summary: Update company profile
+      tags:
+      - company profile
   /user/login:
     post:
       consumes:

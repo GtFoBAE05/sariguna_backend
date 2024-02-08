@@ -543,6 +543,97 @@
                 }
             }
         },
+        "/profile/": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "company profile"
+                ],
+                "summary": "Get company profile",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/helpers.SuccessResponseJson"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.CompanyProfileResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.ErrorResponseJson"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.ErrorResponseJson"
+                        }
+                    }
+                }
+            }
+        },
+        "/profile/update": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "company profile"
+                ],
+                "summary": "Update company profile",
+                "parameters": [
+                    {
+                        "description": "Update",
+                        "name": "Update",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.CompanyProfileUpdate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.SuccessResponseJson"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.ErrorResponseJson"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.ErrorResponseJson"
+                        }
+                    }
+                }
+            }
+        },
         "/user/login": {
             "post": {
                 "description": "Login user",
@@ -671,6 +762,25 @@
                 }
             }
         },
+        "request.CompanyProfileUpdate": {
+            "type": "object",
+            "required": [
+                "misi",
+                "sejarah",
+                "visi"
+            ],
+            "properties": {
+                "misi": {
+                    "type": "string"
+                },
+                "sejarah": {
+                    "type": "string"
+                },
+                "visi": {
+                    "type": "string"
+                }
+            }
+        },
         "request.ProductCategoryCreate": {
             "type": "object",
             "required": [
@@ -716,6 +826,20 @@
                     "type": "string"
                 },
                 "role": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.CompanyProfileResponse": {
+            "type": "object",
+            "properties": {
+                "misi": {
+                    "type": "string"
+                },
+                "sejarah": {
+                    "type": "string"
+                },
+                "visi": {
                     "type": "string"
                 }
             }

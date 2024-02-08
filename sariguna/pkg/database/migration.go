@@ -30,6 +30,14 @@ func Migration(db *sqlx.DB) (err error) {
 			updated_at timestamp DEFAULT NOW()
 		);
 
+		CREATE TABLE IF NOT EXISTS company_profile(
+			id serial PRIMARY KEY,
+			sejarah text,
+			visi text,
+			misi text
+		);
+
+
 		ALTER TABLE product DROP CONSTRAINT IF EXISTS fk_product_category;
 
 		ALTER TABLE product

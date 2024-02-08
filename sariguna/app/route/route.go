@@ -16,6 +16,7 @@ func SetupRoute(r *gin.RouterGroup, db *sqlx.DB) {
 	RouteUser(r, db)
 	RouteProductCategory(r, db)
 	RouteProduct(r, db)
+	RouteCompanyProfile(r, db)
 
 }
 
