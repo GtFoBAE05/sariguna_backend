@@ -17,7 +17,7 @@ func RouteCompanyProfile(r *gin.RouterGroup, db *sqlx.DB) {
 
 	cp := r.Group("/profile")
 
-	cp.GET("", middleware.Auth, companyProfileHandler.GetCompanyProfile)
+	cp.GET("", companyProfileHandler.GetCompanyProfile)
 
 	cp.PUT("/update", middleware.Auth, companyProfileHandler.UpdateCompanyProfile)
 

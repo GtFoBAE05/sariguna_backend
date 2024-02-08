@@ -85,6 +85,13 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/request.ProductCategoryCreate"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -127,6 +134,13 @@ const docTemplate = `{
                         "description": "Product Category Id",
                         "name": "id",
                         "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "bearer token",
+                        "name": "Authorization",
+                        "in": "header",
                         "required": true
                     }
                 ],
@@ -180,6 +194,13 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/request.ProductCategoryCreate"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -408,6 +429,13 @@ const docTemplate = `{
                         "name": "Update",
                         "in": "formData",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -450,6 +478,13 @@ const docTemplate = `{
                         "description": "Product Id",
                         "name": "id",
                         "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "bearer token",
+                        "name": "Authorization",
+                        "in": "header",
                         "required": true
                     }
                 ],
@@ -523,6 +558,13 @@ const docTemplate = `{
                         "description": "image",
                         "name": "Update",
                         "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "bearer token",
+                        "name": "Authorization",
+                        "in": "header",
                         "required": true
                     }
                 ],
@@ -615,6 +657,13 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/request.CompanyProfileUpdate"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {

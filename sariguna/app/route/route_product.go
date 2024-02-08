@@ -19,11 +19,11 @@ func RouteProduct(r *gin.RouterGroup, db *sqlx.DB) {
 
 	category.POST("/create", middleware.Auth, productHandler.CreateProduct)
 
-	category.GET("", middleware.Auth, productHandler.GetAllProduct)
+	category.GET("", productHandler.GetAllProduct)
 
-	category.GET("/byid/:id", middleware.Auth, productHandler.GetProductById)
+	category.GET("/byid/:id", productHandler.GetProductById)
 
-	category.GET("/bycategory/:id", middleware.Auth, productHandler.GetProductByCategory)
+	category.GET("/bycategory/:id", productHandler.GetProductByCategory)
 
 	category.PUT("/update/:id", middleware.Auth, productHandler.UpdateProduct)
 

@@ -19,7 +19,7 @@ func RouteProductCategory(r *gin.RouterGroup, db *sqlx.DB) {
 
 	category.POST("/create", middleware.Auth, productCategoryHandler.CreateProductCategory)
 
-	category.GET("", middleware.Auth, productCategoryHandler.GetAllProductCategory)
+	category.GET("", productCategoryHandler.GetAllProductCategory)
 
 	category.PUT("/update/:id", middleware.Auth, productCategoryHandler.UpdateProductCategory)
 

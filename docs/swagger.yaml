@@ -143,6 +143,11 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/request.ProductCategoryCreate'
+      - description: bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -171,6 +176,11 @@ paths:
         name: id
         required: true
         type: integer
+      - description: bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -205,6 +215,11 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/request.ProductCategoryCreate'
+      - description: bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -345,6 +360,11 @@ paths:
         name: Update
         required: true
         type: file
+      - description: bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -373,6 +393,11 @@ paths:
         name: id
         required: true
         type: integer
+      - description: bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -421,6 +446,11 @@ paths:
         name: Update
         required: true
         type: file
+      - description: bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -477,6 +507,11 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/request.CompanyProfileUpdate'
+      - description: bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:

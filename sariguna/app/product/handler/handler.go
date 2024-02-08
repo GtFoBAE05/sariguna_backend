@@ -25,11 +25,14 @@ func NewProductHandler(ps entity.ProductServiceInterface) *ProductHandler {
 //	@Tags		product
 //	@Accept		json
 //	@Produce	json
-//	@Param		Update	formData	request.ProductCreate	true	"Update"
-//	@Param		Update	formData	file					true	"image"
-//	@Success	201		{object}	helpers.SuccessResponseJson{}
-//	@Failure	422		{object}	helpers.ErrorResponseJson{}
-//	@Failure	400		{object}	helpers.ErrorResponseJson{}
+//	@Param		Update			formData	request.ProductCreate	true	"Update"
+//	@Param		Update			formData	file					true	"image"
+//
+//	@Param		Authorization	header		string					true	"bearer token"
+//
+//	@Success	201				{object}	helpers.SuccessResponseJson{}
+//	@Failure	422				{object}	helpers.ErrorResponseJson{}
+//	@Failure	400				{object}	helpers.ErrorResponseJson{}
 //	@Router		/product/create [post]
 func (ph *ProductHandler) CreateProduct(c *gin.Context) {
 	body := request.ProductCreate{}
@@ -138,12 +141,15 @@ func (ph *ProductHandler) GetProductByCategory(c *gin.Context) {
 //	@Tags		product
 //	@Accept		json
 //	@Produce	json
-//	@Param		id		path		int						true	"Product Id"
-//	@Param		Update	formData	request.ProductCreate	true	"Update"
-//	@Param		Update	formData	file					true	"image"
-//	@Success	200		{object}	helpers.SuccessResponseJson{}
-//	@Failure	422		{object}	helpers.ErrorResponseJson{}
-//	@Failure	400		{object}	helpers.ErrorResponseJson{}
+//	@Param		id				path		int						true	"Product Id"
+//	@Param		Update			formData	request.ProductCreate	true	"Update"
+//	@Param		Update			formData	file					true	"image"
+//
+//	@Param		Authorization	header		string					true	"bearer token"
+//
+//	@Success	200				{object}	helpers.SuccessResponseJson{}
+//	@Failure	422				{object}	helpers.ErrorResponseJson{}
+//	@Failure	400				{object}	helpers.ErrorResponseJson{}
 //	@Router		/product/update/{id} [put]
 func (ph *ProductHandler) UpdateProduct(c *gin.Context) {
 	body := request.ProductCreate{}
@@ -180,10 +186,13 @@ func (ph *ProductHandler) UpdateProduct(c *gin.Context) {
 //	@Tags		product
 //	@Accept		json
 //	@Produce	json
-//	@Param		id	path		int	true	"Product Id"
-//	@Success	200	{object}	helpers.SuccessResponseJson{}
-//	@Failure	422	{object}	helpers.ErrorResponseJson{}
-//	@Failure	400	{object}	helpers.ErrorResponseJson{}
+//	@Param		id				path		int		true	"Product Id"
+//
+//	@Param		Authorization	header		string	true	"bearer token"
+//
+//	@Success	200				{object}	helpers.SuccessResponseJson{}
+//	@Failure	422				{object}	helpers.ErrorResponseJson{}
+//	@Failure	400				{object}	helpers.ErrorResponseJson{}
 //	@Router		/product/delete/{id} [delete]
 func (ph *ProductHandler) DeleteProduct(c *gin.Context) {
 
