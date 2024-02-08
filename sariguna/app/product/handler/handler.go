@@ -21,6 +21,16 @@ func NewProductHandler(ps entity.ProductServiceInterface) *ProductHandler {
 	}
 }
 
+//	@Summary	Create product
+//	@Tags		product
+//	@Accept		json
+//	@Produce	json
+//	@Param		Update	formData	request.ProductCreate	true	"Update"
+//	@Param		Update	formData	file					true	"image"
+//	@Success	201		{object}	helpers.SuccessResponseJson{}
+//	@Failure	422		{object}	helpers.ErrorResponseJson{}
+//	@Failure	400		{object}	helpers.ErrorResponseJson{}
+//	@Router		/product/create [post]
 func (ph *ProductHandler) CreateProduct(c *gin.Context) {
 	body := request.ProductCreate{}
 
@@ -45,6 +55,15 @@ func (ph *ProductHandler) CreateProduct(c *gin.Context) {
 	c.JSON(201, helpers.SuccessResponse(constant.SUCCESS_CREATE_DATA))
 }
 
+//	@Summary	Get all product
+//	@Tags		product
+//	@Accept		json
+//	@Produce	json
+//
+//	@Success	200	{object}	helpers.SuccessResponseJson{data=[]response.ProductResponse}
+//	@Failure	422	{object}	helpers.ErrorResponseJson{}	"invalid payload"
+//	@Failure	400	{object}	helpers.ErrorResponseJson{}
+//	@Router		/product [get]
 func (ph *ProductHandler) GetAllProduct(c *gin.Context) {
 
 	res, errCreate := ph.productService.GetAllProduct()
@@ -57,6 +76,16 @@ func (ph *ProductHandler) GetAllProduct(c *gin.Context) {
 	c.JSON(201, helpers.SuccessWithDataResponse(constant.SUCCESS_GET_DATA, res))
 }
 
+//	@Summary	Get product by product id
+//	@Tags		product
+//	@Accept		json
+//	@Produce	json
+//
+//	@Param		id	path		int	true	"Product Id"
+//	@Success	200	{object}	helpers.SuccessResponseJson{data=response.ProductResponse}
+//	@Failure	422	{object}	helpers.ErrorResponseJson{}	"invalid payload"
+//	@Failure	400	{object}	helpers.ErrorResponseJson{}
+//	@Router		/product/byid/{id} [get]
 func (ph *ProductHandler) GetProductById(c *gin.Context) {
 
 	productId := c.Param("id")
@@ -73,9 +102,19 @@ func (ph *ProductHandler) GetProductById(c *gin.Context) {
 		return
 	}
 
-	c.JSON(201, helpers.SuccessWithDataResponse(constant.SUCCESS_GET_DATA, res))
+	c.JSON(http.StatusOK, helpers.SuccessWithDataResponse(constant.SUCCESS_GET_DATA, res))
 }
 
+//	@Summary	Get product by category id
+//	@Tags		product
+//	@Accept		json
+//	@Produce	json
+//
+//	@Param		id	path		int	true	"category Id"
+//	@Success	200	{object}	helpers.SuccessResponseJson{data=[]response.ProductResponse}
+//	@Failure	422	{object}	helpers.ErrorResponseJson{}	"invalid payload"
+//	@Failure	400	{object}	helpers.ErrorResponseJson{}
+//	@Router		/product/bycategory/{id} [get]
 func (ph *ProductHandler) GetProductByCategory(c *gin.Context) {
 
 	productId := c.Param("id")
@@ -92,9 +131,20 @@ func (ph *ProductHandler) GetProductByCategory(c *gin.Context) {
 		return
 	}
 
-	c.JSON(201, helpers.SuccessWithDataResponse(constant.SUCCESS_GET_DATA, res))
+	c.JSON(http.StatusOK, helpers.SuccessWithDataResponse(constant.SUCCESS_GET_DATA, res))
 }
 
+//	@Summary	Update product
+//	@Tags		product
+//	@Accept		json
+//	@Produce	json
+//	@Param		id		path		int						true	"Product Id"
+//	@Param		Update	formData	request.ProductCreate	true	"Update"
+//	@Param		Update	formData	file					true	"image"
+//	@Success	200		{object}	helpers.SuccessResponseJson{}
+//	@Failure	422		{object}	helpers.ErrorResponseJson{}
+//	@Failure	400		{object}	helpers.ErrorResponseJson{}
+//	@Router		/product/update/{id} [put]
 func (ph *ProductHandler) UpdateProduct(c *gin.Context) {
 	body := request.ProductCreate{}
 
@@ -123,9 +173,18 @@ func (ph *ProductHandler) UpdateProduct(c *gin.Context) {
 		return
 	}
 
-	c.JSON(201, helpers.SuccessResponse(constant.SUCCESS_UPDATE_DATA))
+	c.JSON(http.StatusOK, helpers.SuccessResponse(constant.SUCCESS_UPDATE_DATA))
 }
 
+//	@Summary	Delete product
+//	@Tags		product
+//	@Accept		json
+//	@Produce	json
+//	@Param		id	path		int	true	"Product Id"
+//	@Success	200	{object}	helpers.SuccessResponseJson{}
+//	@Failure	422	{object}	helpers.ErrorResponseJson{}
+//	@Failure	400	{object}	helpers.ErrorResponseJson{}
+//	@Router		/product/delete/{id} [delete]
 func (ph *ProductHandler) DeleteProduct(c *gin.Context) {
 
 	productId := c.Param("id")
@@ -140,5 +199,5 @@ func (ph *ProductHandler) DeleteProduct(c *gin.Context) {
 		return
 	}
 
-	c.JSON(201, helpers.SuccessResponse(constant.SUCCESS_DELETE_DATA))
+	c.JSON(http.StatusOK, helpers.SuccessResponse(constant.SUCCESS_DELETE_DATA))
 }

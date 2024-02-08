@@ -21,6 +21,15 @@ func NewProductCategoryHandler(pcs entity.ProductCategoryServiceInterface) *Prod
 	}
 }
 
+//	@Summary	Create product category
+//	@Tags		product category
+//	@Accept		json
+//	@Produce	json
+//	@Param		Create	body		request.ProductCategoryCreate	true	"Create"
+//	@Success	201		{object}	helpers.SuccessResponseJson{}
+//	@Failure	422		{object}	helpers.ErrorResponseJson{}
+//	@Failure	400		{object}	helpers.ErrorResponseJson{}
+//	@Router		/category/create [post]
 func (pch *ProductCategoryHandler) CreateProductCategory(c *gin.Context) {
 	body := request.ProductCategoryCreate{}
 
@@ -36,9 +45,18 @@ func (pch *ProductCategoryHandler) CreateProductCategory(c *gin.Context) {
 		return
 	}
 
-	c.JSON(201, helpers.SuccessResponse(constant.SUCCESS_CREATE_DATA))
+	c.JSON(http.StatusCreated, helpers.SuccessResponse(constant.SUCCESS_CREATE_DATA))
 }
 
+//	@Summary	Get all product category
+//	@Tags		product category
+//	@Accept		json
+//	@Produce	json
+//
+//	@Success	200	{object}	helpers.SuccessResponseJson{data=[]response.ProductCategoryResponse}
+//	@Failure	422	{object}	helpers.ErrorResponseJson{}	"invalid payload"
+//	@Failure	400	{object}	helpers.ErrorResponseJson{}
+//	@Router		/category [get]
 func (pch *ProductCategoryHandler) GetAllProductCategory(c *gin.Context) {
 
 	res, errCreate := pch.productCategoryService.GetAllProductCategory()
@@ -48,9 +66,19 @@ func (pch *ProductCategoryHandler) GetAllProductCategory(c *gin.Context) {
 		return
 	}
 
-	c.JSON(201, helpers.SuccessWithDataResponse(constant.SUCCESS_GET_DATA, res))
+	c.JSON(http.StatusOK, helpers.SuccessWithDataResponse(constant.SUCCESS_GET_DATA, res))
 }
 
+//	@Summary	Update product category
+//	@Tags		product category
+//	@Accept		json
+//	@Produce	json
+//	@Param		id		path		int								true	"Product Category Id"
+//	@Param		Update	body		request.ProductCategoryCreate	true	"Update"
+//	@Success	200		{object}	helpers.SuccessResponseJson{}
+//	@Failure	422		{object}	helpers.ErrorResponseJson{}
+//	@Failure	400		{object}	helpers.ErrorResponseJson{}
+//	@Router		/category/update/{id} [put]
 func (pch *ProductCategoryHandler) UpdateProductCategory(c *gin.Context) {
 	body := request.ProductCategoryCreate{}
 	id := c.Param("id")
@@ -73,9 +101,18 @@ func (pch *ProductCategoryHandler) UpdateProductCategory(c *gin.Context) {
 		return
 	}
 
-	c.JSON(201, helpers.SuccessResponse(constant.SUCCESS_UPDATE_DATA))
+	c.JSON(http.StatusOK, helpers.SuccessResponse(constant.SUCCESS_UPDATE_DATA))
 }
 
+//	@Summary	Delete product category
+//	@Tags		product category
+//	@Accept		json
+//	@Produce	json
+//	@Param		id	path		int	true	"Product Category Id"
+//	@Success	200	{object}	helpers.SuccessResponseJson{}
+//	@Failure	422	{object}	helpers.ErrorResponseJson{}
+//	@Failure	400	{object}	helpers.ErrorResponseJson{}
+//	@Router		/category/delete/{id} [delete]
 func (pch *ProductCategoryHandler) DeleteProductCategory(c *gin.Context) {
 	id := c.Param("id")
 
@@ -90,5 +127,5 @@ func (pch *ProductCategoryHandler) DeleteProductCategory(c *gin.Context) {
 		return
 	}
 
-	c.JSON(201, helpers.SuccessResponse(constant.SUCCESS_DELETE_DATA))
+	c.JSON(http.StatusOK, helpers.SuccessResponse(constant.SUCCESS_DELETE_DATA))
 }

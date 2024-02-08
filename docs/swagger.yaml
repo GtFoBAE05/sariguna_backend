@@ -14,6 +14,13 @@ definitions:
       status:
         type: boolean
     type: object
+  request.ProductCategoryCreate:
+    properties:
+      CategoryName:
+        type: string
+    required:
+    - CategoryName
+    type: object
   request.UserLogin:
     properties:
       email:
@@ -40,6 +47,26 @@ definitions:
     - password
     - role
     type: object
+  response.ProductCategoryResponse:
+    properties:
+      id:
+        type: integer
+      productCategoryName:
+        type: string
+    type: object
+  response.ProductResponse:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      imageUrl:
+        type: string
+      name:
+        type: string
+      productCategory:
+        type: string
+    type: object
   response.UserRegisterResponse:
     properties:
       email:
@@ -54,6 +81,342 @@ info:
   contact: {}
   title: Swagger Exampaaale API
 paths:
+  /category:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/helpers.SuccessResponseJson'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/response.ProductCategoryResponse'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.ErrorResponseJson'
+        "422":
+          description: invalid payload
+          schema:
+            $ref: '#/definitions/helpers.ErrorResponseJson'
+      summary: Get all product category
+      tags:
+      - product category
+  /category/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Create
+        in: body
+        name: Create
+        required: true
+        schema:
+          $ref: '#/definitions/request.ProductCategoryCreate'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/helpers.SuccessResponseJson'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.ErrorResponseJson'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/helpers.ErrorResponseJson'
+      summary: Create product category
+      tags:
+      - product category
+  /category/delete/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Product Category Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/helpers.SuccessResponseJson'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.ErrorResponseJson'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/helpers.ErrorResponseJson'
+      summary: Delete product category
+      tags:
+      - product category
+  /category/update/{id}:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Product Category Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update
+        in: body
+        name: Update
+        required: true
+        schema:
+          $ref: '#/definitions/request.ProductCategoryCreate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/helpers.SuccessResponseJson'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.ErrorResponseJson'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/helpers.ErrorResponseJson'
+      summary: Update product category
+      tags:
+      - product category
+  /product:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/helpers.SuccessResponseJson'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/response.ProductResponse'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.ErrorResponseJson'
+        "422":
+          description: invalid payload
+          schema:
+            $ref: '#/definitions/helpers.ErrorResponseJson'
+      summary: Get all product
+      tags:
+      - product
+  /product/bycategory/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: category Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/helpers.SuccessResponseJson'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/response.ProductResponse'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.ErrorResponseJson'
+        "422":
+          description: invalid payload
+          schema:
+            $ref: '#/definitions/helpers.ErrorResponseJson'
+      summary: Get product by category id
+      tags:
+      - product
+  /product/byid/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Product Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/helpers.SuccessResponseJson'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.ProductResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.ErrorResponseJson'
+        "422":
+          description: invalid payload
+          schema:
+            $ref: '#/definitions/helpers.ErrorResponseJson'
+      summary: Get product by product id
+      tags:
+      - product
+  /product/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - in: formData
+        name: categoryid
+        required: true
+        type: integer
+      - in: formData
+        name: description
+        required: true
+        type: string
+      - in: formData
+        name: name
+        required: true
+        type: string
+      - in: formData
+        name: status
+        type: boolean
+      - description: image
+        in: formData
+        name: Update
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/helpers.SuccessResponseJson'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.ErrorResponseJson'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/helpers.ErrorResponseJson'
+      summary: Create product
+      tags:
+      - product
+  /product/delete/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Product Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/helpers.SuccessResponseJson'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.ErrorResponseJson'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/helpers.ErrorResponseJson'
+      summary: Delete product
+      tags:
+      - product
+  /product/update/{id}:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Product Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - in: formData
+        name: categoryid
+        required: true
+        type: integer
+      - in: formData
+        name: description
+        required: true
+        type: string
+      - in: formData
+        name: name
+        required: true
+        type: string
+      - in: formData
+        name: status
+        type: boolean
+      - description: image
+        in: formData
+        name: Update
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/helpers.SuccessResponseJson'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.ErrorResponseJson'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/helpers.ErrorResponseJson'
+      summary: Update product
+      tags:
+      - product
   /user/login:
     post:
       consumes:
