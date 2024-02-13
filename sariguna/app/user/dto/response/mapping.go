@@ -15,6 +15,7 @@ func UsersCoreToLoginResponse(data entity.UserCore, token string) UserLoginRespo
 		Id:       data.Id.String(),
 		Fullname: data.Fullname,
 		Email:    data.Email,
+		Role:     data.Role,
 		Token:    token,
 	}
 }
