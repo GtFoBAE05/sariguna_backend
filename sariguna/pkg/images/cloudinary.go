@@ -68,6 +68,6 @@ func getPublicID(url string) string {
 	// Menghapus ekstensi file
 	fileName := strings.TrimSuffix(fileNameWithExt, filepath.Ext(fileNameWithExt))
 	// Menggabungkan bagian nama direktori dan nama file tanpa ekstensi
-	imageID := parts[len(parts)-2] + "/" + fileName
+	imageID := strings.ReplaceAll(parts[len(parts)-2]+"/"+fileName, "%20", " ")
 	return imageID
 }
