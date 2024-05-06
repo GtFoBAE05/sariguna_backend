@@ -17,6 +17,7 @@ func NewProductService(productRepository entity.ProductRepositoryInterface) enti
 
 // CreateProduct implements entity.ProductServiceInterface.
 func (ps *ProductService) CreateProduct(data entity.ProductCore, image *multipart.FileHeader) error {
+
 	err := ps.ProductRepository.CreateProduct(data, image)
 
 	if err != nil {

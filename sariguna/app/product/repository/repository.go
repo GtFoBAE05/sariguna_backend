@@ -24,6 +24,7 @@ func NewProductRepository(db *sqlx.DB) entity.ProductRepositoryInterface {
 
 // CreateProduct implements entity.ProductRepositoryInterface.
 func (pr *ProductRepository) CreateProduct(data entity.ProductCore, image *multipart.FileHeader) error {
+	uploadUrl := "https://res.cloudinary.com/dxtawi0rz/image/upload/v1715013456/knnc6jdaaraitoik7gia.png"
 	productCategory := productcategory.ProductCategory{}
 
 	query := `SELECT id, category_name from product_category where id = $1`
@@ -32,18 +33,29 @@ func (pr *ProductRepository) CreateProduct(data entity.ProductCore, image *multi
 	if err != nil {
 		return err
 	}
-	uploadUrl, err := images.Upload(image, productCategory.CategoryName)
-	if err != nil {
-		return err
-	}
+	if image != nil {
+		uploadUrl, err = images.Upload(image, productCategory.CategoryName)
+		if err != nil {
+			return err
+		}
+		query = `INSERT INTO product (category_id, name, description, status, image_url) 
+		VALUES ($1, $2, $3, $4, $5)`
 
-	query = `INSERT INTO product (category_id, name, description, status, image_url) 
-	VALUES ($1, $2, $3, $4, $5)`
+		_, err = pr.db.Exec(query, data.CategoryId, data.Name, data.Description, data.Status, uploadUrl)
 
-	_, err = pr.db.Exec(query, data.CategoryId, data.Name, data.Description, data.Status, uploadUrl)
+		if err != nil {
+			return err
+		}
+	} else {
+		query = `INSERT INTO product (category_id, name, description, status, image_url) 
+		VALUES ($1, $2, $3, $4, $5)`
 
-	if err != nil {
-		return err
+		_, err = pr.db.Exec(query, data.CategoryId, data.Name, data.Description, data.Status, uploadUrl)
+
+		if err != nil {
+			return err
+		}
+
 	}
 
 	return nil
@@ -57,10 +69,12 @@ func (pr *ProductRepository) DeleteProduct(id int) error {
 		return err
 	}
 
-	errDelete := images.Remove(res.ImageUrl)
+	if res.ImageUrl != "https://res.cloudinary.com/dxtawi0rz/image/upload/v1715013456/knnc6jdaaraitoik7gia.png" {
+		errDelete := images.Remove(res.ImageUrl)
 
-	if errDelete != nil {
-		return errDelete
+		if errDelete != nil {
+			return errDelete
+		}
 	}
 
 	query := `DELETE FROM product
@@ -163,36 +177,62 @@ func (pr *ProductRepository) UpdateProduct(id int, data entity.ProductCore, imag
 		return err
 	}
 
-	errDelete := images.Remove(res.ImageUrl)
-
-	if errDelete != nil {
-		return errDelete
-	}
-
 	query := `SELECT id, category_name from product_category where id = $1`
 
 	err = pr.db.Get(&productCategory, query, data.CategoryId)
 	if err != nil {
 		return err
 	}
-	uploadUrl, err := images.Upload(image, productCategory.CategoryName)
-	if err != nil {
-		return err
-	}
 
-	query = `UPDATE product
-	SET category_id = $1,
-	name = $2,
-	description = $3,
-	status = $4,
-	updated_at = $5,
-	image_url = $6
-	WHERE id = $7`
+	if image != nil {
 
-	_, err = pr.db.Exec(query, request.CategoryId, request.Name, request.Description, request.Status, time.Now(), uploadUrl, id)
+		if res.ImageUrl != "https://res.cloudinary.com/dxtawi0rz/image/upload/v1715013456/knnc6jdaaraitoik7gia.png" {
+			errDelete := images.Remove(res.ImageUrl)
 
-	if err != nil {
-		return err
+			if errDelete != nil {
+				return errDelete
+			}
+		}
+		newUploadUrl, err := images.Upload(image, productCategory.CategoryName)
+		if err != nil {
+			return err
+		}
+
+		query = `UPDATE product
+			SET category_id = $1,
+			name = $2,
+			description = $3,
+			status = $4,
+			updated_at = $5,
+			image_url = $6
+			WHERE id = $7`
+
+		_, err = pr.db.Exec(query, request.CategoryId, request.Name, request.Description, request.Status, time.Now(), newUploadUrl, id)
+
+		if err != nil {
+			return err
+		}
+	} else {
+		query := `SELECT id, category_name from product_category where id = $1`
+
+		err = pr.db.Get(&productCategory, query, data.CategoryId)
+		if err != nil {
+			return err
+		}
+
+		query = `UPDATE product
+			SET category_id = $1,
+			name = $2,
+			description = $3,
+			status = $4,
+			updated_at = $5
+			WHERE id = $6`
+
+		_, err = pr.db.Exec(query, request.CategoryId, request.Name, request.Description, request.Status, time.Now(), id)
+
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
