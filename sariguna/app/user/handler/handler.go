@@ -82,6 +82,61 @@ func (uh *userHandler) Login(c *gin.Context) {
 
 }
 
+func (uh *userHandler) GetProfileById(c *gin.Context) {
+	userIDRaw, exists := c.Get("userId")
+	if !exists {
+		c.JSON(http.StatusForbidden, gin.H{
+			"error":   true,
+			"message": "No token or Failed to retrieve user ID.",
+		})
+		return
+	}
+
+	userID, _ := userIDRaw.(string)
+
+	result, errGet := uh.userService.FindById(string(userID))
+
+	if errGet != nil {
+		c.JSON(http.StatusBadRequest, helpers.ErrorResponse(errGet.Error()))
+		return
+	}
+
+	response := response.UsersCoreToUserDetailResponse(result)
+
+	c.JSON(200, helpers.SuccessWithDataResponse(constant.SUCCESS_LOGIN, response))
+
+}
+
+func (uh *userHandler) UpdatePassword(c *gin.Context) {
+	body := request.UserNewPassword{}
+
+	if errBind := c.ShouldBindJSON(&body); errBind != nil {
+		c.JSON(422, helpers.ErrorResponse(constant.ERROR_INVALID_PAYLOAD))
+		return
+	}
+
+	userIDRaw, exists := c.Get("userId")
+	if !exists {
+		c.JSON(http.StatusForbidden, gin.H{
+			"error":   true,
+			"message": "No token or Failed to retrieve user ID.",
+		})
+		return
+	}
+
+	userID, _ := userIDRaw.(string)
+
+	errLogin := uh.userService.UpdatePassword(userID, body.Password)
+
+	if errLogin != nil {
+		c.JSON(http.StatusBadRequest, helpers.ErrorResponse(errLogin.Error()))
+		return
+	}
+
+	c.JSON(200, helpers.SuccessResponse(constant.SUCCESS_UPDATE_DATA))
+
+}
+
 func CheckMiddleware(c *gin.Context) {
 	userID, exists := c.Get("userId")
 	if !exists {

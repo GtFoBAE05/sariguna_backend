@@ -21,6 +21,10 @@ func RouteUser(r *gin.RouterGroup, db *sqlx.DB) {
 
 	user.POST("/login", userHandler.Login)
 
+	user.GET("/get-detail", middleware.Auth, userHandler.GetProfileById)
+
+	user.PUT("/update-password", middleware.Auth, userHandler.UpdatePassword)
+
 	user.GET("/pong", middleware.Auth, handler.CheckMiddleware)
 
 }

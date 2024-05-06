@@ -65,3 +65,46 @@ func (ur *userRepository) FindByEmail(email string) (entity.UserCore, error) {
 
 	return dataResponse, nil
 }
+
+// FindById implements entity.UserRepositoryInterface.
+func (ur *userRepository) FindById(id string) (entity.UserCore, error) {
+	dataUser := model.User{}
+
+	query := `SELECT id, fullname, email, password, role FROM users WHERE id = $1`
+
+	err := ur.db.Get(&dataUser, query, id)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return entity.UserCore{}, fmt.Errorf("no user found with email: %s", id)
+		}
+		return entity.UserCore{}, fmt.Errorf("error in FindByEmail: %w", err)
+	}
+
+	dataResponse := entity.UserModelToUserCore(dataUser)
+
+	return dataResponse, nil
+}
+
+// UpdatePassword implements entity.UserRepositoryInterface.
+func (ur *userRepository) UpdatePassword(id, password string) error {
+	query := `UPDATE  users
+		SET password = $1
+		WHERE id = $2
+		`
+
+	hashedPassword, err := helpers.HashPassword(password)
+	if err != nil {
+		return err
+	}
+
+	_, err = ur.db.Exec(query, hashedPassword, id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return fmt.Errorf("no user found with id: %s", id)
+		}
+		return fmt.Errorf("error in findById: %w", err)
+	}
+
+	return nil
+}

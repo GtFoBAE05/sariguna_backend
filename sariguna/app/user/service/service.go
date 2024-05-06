@@ -17,6 +17,27 @@ func NewUserService(userRepo entity.UserRepositoryInterface) entity.UserServiceI
 	}
 }
 
+// FindById implements entity.UserServiceInterface.
+func (us *userService) FindById(id string) (entity.UserCore, error) {
+	dataUser, err := us.userRepo.FindById(id)
+
+	if err != nil {
+		return entity.UserCore{}, err
+	}
+
+	return dataUser, nil
+}
+
+// UpdatePassword implements entity.UserServiceInterface.
+func (us *userService) UpdatePassword(id string, password string) error {
+	err := us.userRepo.UpdatePassword(id, password)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (us *userService) Register(data entity.UserCore) (entity.UserCore, error) {
 	//validasi
 

@@ -19,3 +19,12 @@ func UsersCoreToLoginResponse(data entity.UserCore, token string) UserLoginRespo
 		Token:    token,
 	}
 }
+
+func UsersCoreToUserDetailResponse(data entity.UserCore) UserDetailResponse {
+	return UserDetailResponse{
+		Id:       data.Id.String(),
+		Fullname: data.Fullname,
+		Email:    data.Email,
+		Role:     data.Role,
+	}
+}
